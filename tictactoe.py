@@ -1,3 +1,4 @@
+from random import randint
 def process_field(field, turn, depth, max_depth):
     if depth == max_depth:
         print_field(field)
@@ -22,6 +23,10 @@ def print_field(field):
 def list_moves(field):
     return [i for i in range(len(field[0])) if find_y(field, i) != -1]
 
+def list_reasonable_moves(field):
+    moves = list_moves(field)
+    return [i for i in moves if is_surrounded(field, i)]
+
 def find_y(field, x):
     '''
     return y coordinate of empty cell in column
@@ -32,6 +37,8 @@ def find_existing_y(field, x):
     '''
     return y coordinate of heighest elem in column, if no elems in column, return -1
     '''
+    if field[0][x] == "*":
+        return -1
     for num, row in enumerate(field):
         if row[x] != "*":
             continue
@@ -47,6 +54,14 @@ def find_elem_in_column(field, x, pred):
 
 def opponent_turn(cur_turn):
     return "O" if cur_turn == "X" else "X"
+
+def is_surrounded(field, x):
+    coords = [i in [x-1, x, x+1] if i >= 0 and i < len(field[0])]
+    for i in coords:
+        if find_existing_y(field, i) != -1:
+            return True
+    return False
+
 
 def make_move(field, x, move):
     y = find_y(field, x)
