@@ -57,7 +57,7 @@ def unmake_move(field, x):
     field[y][x] = "*"
 
 if __name__ == '__main__':
-    field = [["*" for j in range(6)] for i in range(4)]
+    field = [["*" for j in range(10)] for i in range(6)]
     process_field(field, "O", 1, 4) 
 #make_move(field, 2, "X")
 #make_move(field, 2, "X")
