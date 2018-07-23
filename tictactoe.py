@@ -7,16 +7,16 @@ def process_field(field, turn, depth, max_depth):
     moves = list_reasonable_moves(field, depth)
     results = []
     for i in moves:
-        make_move(field, i, turn)
+        field.make_move(i, turn)
         results.append(process_field(field, opponent_turn(turn), depth+1, max_depth))
-        unmake_move(field, i)
+        field.unmake_move(i)
     return max(results)
 
 def evaluate_field(field):
     return 1
 
 def list_moves(field):
-    return [i for i in range(field.width()) if find_y(field, i) != -1]
+    return field.available_moves()
 
 def list_reasonable_moves(field, depth):
     if depth < 2:
@@ -24,48 +24,16 @@ def list_reasonable_moves(field, depth):
     moves = list_moves(field)
     return [i for i in moves if is_surrounded(field, i)]
 
-def find_y(field, x):
-    '''
-    return y coordinate of empty cell in column
-    '''
-    return find_elem_in_column(field, x, lambda x: x == "*")
-
-def find_existing_y(field, x):
-    '''
-    return y coordinate of the heighest elem in column, if no elems in column, return -1
-    '''
-    if field[x,0] == "*":
-        return -1
-    for y in range(field.height()):
-        if field[x,y] != "*":
-            continue
-        return y - 1
-    return field.height() - 1
-
-def find_elem_in_column(field, x, pred):
-    for y in range(field.height()):
-        if pred(field[x,y]):
-            return y
-    return -1
-
 def opponent_turn(cur_turn):
     return "O" if cur_turn == "X" else "X"
 
 def is_surrounded(field, x):
     coords = [i for i in  [x-1, x, x+1] if (i >= 0) and (i < field.width())]
     for i in coords:
-        if find_existing_y(field, i) != -1:
+        if field.heighest_elem[i] != -1:
             return True
     return False
 
-
-def make_move(field, x, move):
-    y = find_y(field, x)
-    field[x,y] = move
-
-def unmake_move(field, x):
-    y = find_existing_y(field, x)
-    field[x,y] = "*"
 
 if __name__ == '__main__':
     #field = [["*" for j in range(10)] for i in range(6)]
