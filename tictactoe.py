@@ -1,9 +1,10 @@
+from im import field_object
 from random import randint
 def process_field(field, turn, depth, max_depth):
     if depth == max_depth:
-        print_field(field)
+        field.print()
         return evaluate_field(field)
-    moves = list_moves(field)
+    moves = list_reasonable_moves(field, depth)
     results = []
     for i in moves:
         make_move(field, i, turn)
@@ -14,16 +15,12 @@ def process_field(field, turn, depth, max_depth):
 def evaluate_field(field):
     return 1
 
-def print_field(field):
-    for i in field:
-        print("   ".join(i))
-        print("\n")
-    print("___________________________________________________")
-
 def list_moves(field):
-    return [i for i in range(len(field[0])) if find_y(field, i) != -1]
+    return [i for i in range(field.width()) if find_y(field, i) != -1]
 
-def list_reasonable_moves(field):
+def list_reasonable_moves(field, depth):
+    if depth < 2:
+        return [field.width()//2]
     moves = list_moves(field)
     return [i for i in moves if is_surrounded(field, i)]
 
@@ -35,28 +32,27 @@ def find_y(field, x):
 
 def find_existing_y(field, x):
     '''
-    return y coordinate of heighest elem in column, if no elems in column, return -1
+    return y coordinate of the heighest elem in column, if no elems in column, return -1
     '''
-    if field[0][x] == "*":
+    if field[x,0] == "*":
         return -1
-    for num, row in enumerate(field):
-        if row[x] != "*":
+    for y in range(field.height()):
+        if field[x,y] != "*":
             continue
-        return num - 1
-    return len(x) - 1
-#    return find_elem_in_column(field, x, lambda x: x != "*")
+        return y - 1
+    return field.height() - 1
 
 def find_elem_in_column(field, x, pred):
-    for num, row in enumerate(field):
-        if pred(row[x]):
-            return num
+    for y in range(field.height()):
+        if pred(field[x,y]):
+            return y
     return -1
 
 def opponent_turn(cur_turn):
     return "O" if cur_turn == "X" else "X"
 
 def is_surrounded(field, x):
-    coords = [i in [x-1, x, x+1] if i >= 0 and i < len(field[0])]
+    coords = [i for i in  [x-1, x, x+1] if (i >= 0) and (i < field.width())]
     for i in coords:
         if find_existing_y(field, i) != -1:
             return True
@@ -65,15 +61,16 @@ def is_surrounded(field, x):
 
 def make_move(field, x, move):
     y = find_y(field, x)
-    field[y][x] = move
+    field[x,y] = move
 
 def unmake_move(field, x):
     y = find_existing_y(field, x)
-    field[y][x] = "*"
+    field[x,y] = "*"
 
 if __name__ == '__main__':
-    field = [["*" for j in range(10)] for i in range(6)]
-    process_field(field, "O", 1, 4) 
+    #field = [["*" for j in range(10)] for i in range(6)]
+    a = field_object((10,6))
+    process_field(a , "O", 1, 8) 
 #make_move(field, 2, "X")
 #make_move(field, 2, "X")
 #make_move(field, 2, "X")
