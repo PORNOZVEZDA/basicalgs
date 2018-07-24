@@ -88,6 +88,7 @@ class field_object:
     def count_successfull_combinations(self, list_of_combinations, turn):
         return 42
 
+    #TODO: add function that finds all elements that can create combintation. i.e. 'wall' elements and elems that have diognal above them!
     def __count_combinations__(self, turn):
         global_res = 0
         heighest_elems_coords = [i for i in range(self.Width) if self.heighest_elem[x] != -1 and self.heighest_elem[x] < H]
