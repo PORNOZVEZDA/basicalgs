@@ -10,6 +10,7 @@ class Tile:
     def __init__(self, m, n):
         self.tile_matrix = [[None for i in range(n)] for i in range(m)]
         self.last_empty_cell = (0, 0)
+        self.result = []
         self.Y = m
         self.X = n
 
@@ -20,7 +21,9 @@ class Tile:
             return False
         return True
 
-    def list_moves(self):
+    #TODO create method that calculates next cell to fulfill
+    #how to change lastx|lasty cell after commiting move?
+    def list_moves(self, lastx, lasty):
         res = []
         x, y = self.last_empty_cell
         if valid_coords(x+1, y):
@@ -39,7 +42,8 @@ class Tile:
         self.tile_matrix[x][y] = color
         self.tile_matrix[x1][y1] = color
 
-
+    def evaluate(self, empty_cells):
+        if empty_cells == 0:
 
 if __name__ == '__main__':
     desk = Tile(6, 6)
