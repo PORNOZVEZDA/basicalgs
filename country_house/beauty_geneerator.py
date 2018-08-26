@@ -1,4 +1,15 @@
 from enum import Enum
+from sys import argv
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 class Tile_color(Enum):
     white = 'w'
@@ -52,7 +63,7 @@ class Tile:
     def __str__(self):
         res = ""
         for i in self.tile_matrix:
-            cur = " ".join([str(j) for j in i]) + "\n"
+            cur = " ".join(["{0:02}".format(j) for j in i]) + "\n"
             res += cur
         return res
     def commit_change(self, x, y, x1, y1, tile):
@@ -75,8 +86,8 @@ class Tile:
             self.uncommit_move(x,y,x1,y1)
             
 if __name__ == '__main__':
-    desk = Tile(4,4)
-    desk.evaluate(4*4)
-    desk.tile_matrix[2][2] = 6
+    size = int(argv[1])
+    desk = Tile(size,size)
+    desk.evaluate(size*size)
     print(desk.positions)
 
